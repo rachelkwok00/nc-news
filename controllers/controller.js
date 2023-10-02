@@ -3,7 +3,7 @@ const app = express()
 
 const {
     selectTopics,
-    returnData
+    getFile
   } = require('../models/model.js');
   
   exports.getTopics = (req, res, next) => {
@@ -16,8 +16,8 @@ const {
     });
   };
 
-  exports.addToApi = (req, res , next) => {
-    returnData ()
+  exports.getData = (req, res , next) => {
+    getFile ()
     .then(result => {
       res.status(200).send({apiEndpoints : result});
     })

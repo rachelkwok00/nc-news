@@ -7,7 +7,7 @@ function selectTopics(){
   });
 };
 
-function returnData(){
+function getFile(){
   
 return fs.readFile(`${__dirname}/../endpoints.json`).then((files)=>{ 
 
@@ -15,4 +15,4 @@ return JSON.parse(files)
 
 })}
 
-module.exports = {selectTopics , returnData}
+module.exports = {selectTopics , getFile}

@@ -59,13 +59,9 @@ describe('/api/topics', ()=>{
                 return request(app).get("/api").expect(200).then(response => {
                 
                     const responseObj = response.body.apiEndpoints
-                    
-                     
+                      
                     expect(responseObj).toBeInstanceOf(Object);
                     expect(Object.keys(responseObj).length).toBe(3);
-
-                    console.log(responseObj,'HERE!!')
-
 
                     for (const endpoint in responseObj) {
                         const obj = responseObj[endpoint];
