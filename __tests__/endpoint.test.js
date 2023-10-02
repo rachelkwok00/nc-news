@@ -13,7 +13,7 @@ describe('/api/topics', ()=>{
         return request(app).get('/api/topics')
         .expect(200)
     })
-    test("Should return an object with property treasures", () => {
+    test("Should return an object with property topics", () => {
         return request(app).get("/api/topics").expect(200).then(result => {
              expect(Array.isArray(result.body.topics)).toBe(true);
         })
@@ -26,9 +26,12 @@ describe('/api/topics', ()=>{
     test("Should return an nested object each with the property slug and description", () => {
         return request(app).get("/api/topics").expect(200).then(result => {
 
-            result.body.topics.forEach(obj=>{
-                expect(obj).hasOwnProperty("slug")
-                expect(obj).hasOwnProperty("description")
+             const topics = result.body.topics
+            expect(topics.length).toBe(3)
+            topics.forEach(topic=>{
+                expect(topic).toHaveProperty("slug", expect.any(String))
+                expect(topic).toHaveProperty("description", expect.any(String))
+            })
             })
     
         })
