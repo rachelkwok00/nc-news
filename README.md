@@ -11,7 +11,6 @@
 
 3.Install dependencies
 -npm install
--npm install pg
 
 4.Seed database
 -npm run setup-dbs
