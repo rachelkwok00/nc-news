@@ -1,10 +1,14 @@
 const express = require('express');
 const app = express();
+app.use (express.json()) ;
 const {
-    getTopics
+    getTopics,
+    addToApi
 } = require('./controllers/controller.js');
 
+
 app.get('/api/topics', getTopics);
+app.get('/api', addToApi);
 
 app.use((err, req, res, next) => {
     console.error(err);
