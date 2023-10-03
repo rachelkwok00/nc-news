@@ -3,7 +3,7 @@ const request = require('supertest');
 const app = require('../app.js');
 const seed = require('../db/seeds/seed.js');
 const testData = require('../db/data/test-data/');
-
+// const jestSorted = require('jest-sorted');
 
 beforeEach(()=> seed(testData))
 afterAll(() => db.end());
@@ -137,14 +137,42 @@ describe('/api/articles/:article_id', () => {
         })
 
 describe('/api/articles', () => {
-            test.only('GET:200 sends a array of all articles to the client', () => {
-              return request(app)
+
+            test("The array returned should be the correct length and contain the correct properties,not body", () => {
+
+                return request(app)
                 .get('/api/articles')
                 .expect(200)
                 .then((response) => {
-             
-                  expect(Array.isArray(response.body.article))
-                });
-            });
-          
+                   console.log(response.body.articles)
+                    const articleArr = response.body.articles
+
+                    expect(articleArr.length).toBe(13)
+
+                    articleArr.forEach((article) => {
+                      expect(article).toHaveProperty('author', expect.any(String));
+                      expect(article).toHaveProperty('title', expect.any(String));
+                      expect(article).toHaveProperty('article_id', expect.any(Number));
+                      expect(article).toHaveProperty('topic', expect.any(String));
+                      expect(article).toHaveProperty('created_at', expect.any(String));
+                      expect(article).toHaveProperty('votes', expect.any(Number));
+                      expect(article).toHaveProperty('article_img_url', expect.any(String));
+                      expect(article).toHaveProperty('comment_count', expect.any(String));
+                      expect(article).not.toHaveProperty('body');
+                
+                })
+            })
     })
+    test("Returned array should be sorted by descending order of aricles created at", () => {
+        return request(app).get("/api/articles").expect(200).then(result => {
+
+
+            const articlesArr = result.body.articles;
+           
+
+            expect(articlesArr).toBeSorted({key: "created_at", descending: true})
+           
+        })
+    })
+    
+})
