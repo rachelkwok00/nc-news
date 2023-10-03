@@ -4,13 +4,15 @@ app.use (express.json()) ;
 const {
     getTopics,
     getData,
-    getArticleById
+    getArticleById,
+    fetchArticles
 } = require('./controllers/controller.js');
 
 
 app.get('/api/topics', getTopics);
 app.get('/api', getData);
 app.get('/api/articles/:article_id', getArticleById);
+app.get('/api/articles', fetchArticles);
 
 
 

@@ -4,7 +4,9 @@ const app = express()
 const {
     selectTopics,
     getFile,
-  selectArticleById
+  selectArticleById,
+  selectAllArticles
+
   } = require('../models/model.js');
   
   exports.getTopics = (req, res, next) => {
@@ -35,6 +37,18 @@ const {
     })
       .catch(err => {
       
+        next(err);
+      })
+  };
+
+
+  exports.fetchArticles = (req, res, next) => {
+    
+    selectAllArticles(req).then((articles) => {
+      res.status(200).send({ articles });
+    })
+      .catch(err => {
+    
         next(err);
       })
   };

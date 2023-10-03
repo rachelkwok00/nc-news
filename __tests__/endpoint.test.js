@@ -82,7 +82,7 @@ describe('/api/topics', ()=>{
               });
         })
 
-        describe('/api/articles/:article_id', () => {
+describe('/api/articles/:article_id', () => {
             test('GET:200 sends a single article object to the client', () => {
               return request(app)
                 .get('/api/articles/3')
@@ -135,3 +135,16 @@ describe('/api/topics', ()=>{
               });
 
         })
+
+describe('/api/articles', () => {
+            test.only('GET:200 sends a array of all articles to the client', () => {
+              return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then((response) => {
+             
+                  expect(Array.isArray(response.body.article))
+                });
+            });
+          
+    })
