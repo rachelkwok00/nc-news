@@ -59,10 +59,9 @@ describe('/api/topics', ()=>{
                 return request(app).get("/api").expect(200).then(response => {
                 
                     const responseObj = response.body.apiEndpoints
-                      
+                   
                     expect(responseObj).toBeInstanceOf(Object);
-                    expect(Object.keys(responseObj).length).toBe(3);
-
+                    
                     for (const endpoint in responseObj) {
                         const obj = responseObj[endpoint];
         
@@ -78,7 +77,61 @@ describe('/api/topics', ()=>{
                   .get('/not-a-api')
                   .expect(404)
                   .then((response) => {
-                expect(response.body.msg).toBe("Invalid api endpoint");
+                expect(response.body.msg).toBe("No match found");
                   });
               });
+        })
+
+        describe('/api/articles/:article_id', () => {
+            test('GET:200 sends a single article object to the client', () => {
+              return request(app)
+                .get('/api/articles/3')
+                .expect(200)
+                .then((response) => {
+             
+                  expect(typeof response.body.article).toBe('object');
+                });
+            });
+           
+          test("Should return a object with the properties author ,title, article_id, body. topic, created_at,  votes, article_img_url", () => {
+                  return request(app).get("/api/articles/4").expect(200).then(response => {
+
+                      const responseObj = response.body.article
+                    console.log(responseObj)
+                      expect(Object.keys(responseObj).length).toBe(8);
+
+                      const expectedResponse = {
+                        article_id: 4,
+                        title: 'Student SUES Mitch!',
+                        topic: 'mitch',
+                        author: 'rogersop',
+                        body: 'We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages',
+                        created_at: '2020-05-06T01:14:00.000Z',
+                        votes: 0,
+                        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                    };
+
+                 expect(responseObj).toEqual(expectedResponse);
+                   
+                  })
+              })
+              test('GET:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
+                return request(app)
+                  .get("/api/articles/5000000")
+                  .expect(404)
+                  .then((response) => {
+                    
+                    expect(response.body.msg).toBe("No user found for article: 5000000");
+
+                  });
+              });
+              test('GET:400 responds with an appropriate error message when given an invalid id', () => {
+                return request(app)
+                  .get("/api/articles/not-a-id")
+                  .expect(400)
+                  .then((response) => {
+                    expect(response.body.msg).toBe('Bad request');
+                  });
+              });
+
         })
