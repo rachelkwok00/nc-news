@@ -3,7 +3,8 @@ const app = express()
 
 const {
     selectTopics,
-    getFile
+    getFile,
+  selectArticleById
   } = require('../models/model.js');
   
   exports.getTopics = (req, res, next) => {
@@ -25,3 +26,18 @@ const {
       next(err);
     });
   }
+
+  exports.getArticleById = (req, res, next) => {
+   
+    const { article_id } = req.params;
+    selectArticleById(article_id).then((article) => {
+      if (article === "No article") {
+       return next("No match found");
+      }
+      res.status(200).send({ article });
+    })
+      .catch(err => {
+      
+        next(err);
+      })
+  };

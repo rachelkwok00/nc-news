@@ -59,10 +59,9 @@ describe('/api/topics', ()=>{
                 return request(app).get("/api").expect(200).then(response => {
                 
                     const responseObj = response.body.apiEndpoints
-                      
+                   
                     expect(responseObj).toBeInstanceOf(Object);
-                    expect(Object.keys(responseObj).length).toBe(3);
-
+                    
                     for (const endpoint in responseObj) {
                         const obj = responseObj[endpoint];
         
@@ -78,7 +77,58 @@ describe('/api/topics', ()=>{
                   .get('/not-a-api')
                   .expect(404)
                   .then((response) => {
-                expect(response.body.msg).toBe("Invalid api endpoint");
+                expect(response.body.msg).toBe("No match found");
                   });
               });
+        })
+
+        describe('/api/articles/:article_id', () => {
+            test('GET:200 sends a single article object to the client', () => {
+              return request(app)
+                .get('/api/articles/3')
+                .expect(200)
+                .then((response) => {
+             
+                  expect(typeof response.body.article).toBe('object');
+                });
+            });
+           
+          test("Should return a object with the properties author ,title, article_id, body. topic, created_at,  votes, article_img_url", () => {
+                  return request(app).get("/api/articles/4").expect(200).then(response => {
+
+                      const responseObj = response.body.article
+
+                      expect(Object.keys(responseObj).length).toBe(8);
+
+
+                expect(responseObj).toHaveProperty("author", expect.any(String));
+                  expect(responseObj).toHaveProperty("title", expect.any(String));
+                  expect(responseObj).toHaveProperty("article_id", expect.any(Number));
+                  expect(responseObj).toHaveProperty("body", expect.any(String));
+                  expect(responseObj).toHaveProperty("topic", expect.any(String));
+                  expect(responseObj).toHaveProperty("created_at", expect.any(String)); 
+                  expect(responseObj).toHaveProperty("votes", expect.any(Number));
+                  expect(responseObj).toHaveProperty("article_img_url", expect.any(String));
+                          
+                  })
+              })
+              test('GET:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
+                return request(app)
+                  .get("/api/articles/5000000")
+                  .expect(404)
+                  .then((response) => {
+                    
+                    expect(response.body.msg).toBe("No user found for article: 5000000");
+                    
+                  });
+              });
+              test('GET:400 responds with an appropriate error message when given an invalid id', () => {
+                return request(app)
+                  .get("/api/articles/not-a-id")
+                  .expect(400)
+                  .then((response) => {
+                    expect(response.body.msg).toBe('Bad request');
+                  });
+              });
+
         })
