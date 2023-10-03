@@ -36,5 +36,49 @@ describe('/api/topics', ()=>{
     
         })
     })
-    
+        
+ describe('/api/', () => {
+            test('GET:200 sends a single team to the client', () => {
+              return request(app)
+                .get('/api')
+                .expect(200)
+                .then((response) => {
+                
+                  expect(typeof response.body.apiEndpoints).toBe('object');
+                });
+            });
+            test("Should return an object with the property apiEndpoints", () => {
+                return request(app).get("/api").expect(200).then(response => {
 
+                    expect(response.body).hasOwnProperty("apiEndpoints");
+                    expect(response.body).toBeInstanceOf(Object);
+                
+                })
+            })
+            test("Should return an nested object each with the property description,queries,exampleResponse", () => {
+                return request(app).get("/api").expect(200).then(response => {
+                
+                    const responseObj = response.body.apiEndpoints
+                      
+                    expect(responseObj).toBeInstanceOf(Object);
+                    expect(Object.keys(responseObj).length).toBe(3);
+
+                    for (const endpoint in responseObj) {
+                        const obj = responseObj[endpoint];
+        
+                        expect(obj).toBeInstanceOf(Object);
+                        expect(obj).toHaveProperty("description", expect.any(String));
+                        expect(obj).toHaveProperty("queries", expect.any(Array));
+                        expect(obj).toHaveProperty("exampleResponse", expect.any(Object));
+                        }
+                })
+            })
+            test('GET:404 sends a error when the endpoint does not exist', () => {
+                return request(app)
+                  .get('/not-a-api')
+                  .expect(404)
+                  .then((response) => {
+                expect(response.body.msg).toBe("Invalid api endpoint");
+                  });
+              });
+        })

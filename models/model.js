@@ -1,4 +1,5 @@
 const db = require('../db/connection.js');
+const fs = require('fs/promises')
 
 function selectTopics(){
   return db.query('SELECT * FROM topics;').then((result) => {
@@ -6,5 +7,12 @@ function selectTopics(){
   });
 };
 
+function getFile(){
+  
+return fs.readFile(`${__dirname}/../endpoints.json`).then((files)=>{ 
 
-module.exports = {selectTopics}
+return JSON.parse(files)
+
+})}
+
+module.exports = {selectTopics , getFile}
