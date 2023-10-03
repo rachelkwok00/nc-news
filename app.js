@@ -16,13 +16,8 @@ app.all('/*', (req, res, next) => {
 
 app.use((err, req, res, next) => {
     console.error(err);
-    res.status(500).send({ msg: 'Internal Server Error' });
+    res.status(500).send({ msg: "Internal Server Error" });
   });
   
-  app.use((err, req, res, next) => {
-    if (err === "Invalid query") {
-      res.status(400).send({msg: "Invalid order query"});
-    }
-    next(err);})
 
 module.exports = app;

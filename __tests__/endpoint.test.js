@@ -73,4 +73,12 @@ describe('/api/topics', ()=>{
                         }
                 })
             })
+            test('GET:404 sends a error when the endpoint does not exist', () => {
+                return request(app)
+                  .get('/not-a-api')
+                  .expect(404)
+                  .then((response) => {
+                expect(response.body.msg).toBe("Invalid api endpoint");
+                  });
+              });
         })
