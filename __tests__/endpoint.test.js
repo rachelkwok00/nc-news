@@ -97,19 +97,22 @@ describe('/api/topics', ()=>{
                   return request(app).get("/api/articles/4").expect(200).then(response => {
 
                       const responseObj = response.body.article
-
+                    console.log(responseObj)
                       expect(Object.keys(responseObj).length).toBe(8);
 
+                      const expectedResponse = {
+                        article_id: 4,
+                        title: 'Student SUES Mitch!',
+                        topic: 'mitch',
+                        author: 'rogersop',
+                        body: 'We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages',
+                        created_at: '2020-05-06T01:14:00.000Z',
+                        votes: 0,
+                        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                    };
 
-                expect(responseObj).toHaveProperty("author", expect.any(String));
-                  expect(responseObj).toHaveProperty("title", expect.any(String));
-                  expect(responseObj).toHaveProperty("article_id", expect.any(Number));
-                  expect(responseObj).toHaveProperty("body", expect.any(String));
-                  expect(responseObj).toHaveProperty("topic", expect.any(String));
-                  expect(responseObj).toHaveProperty("created_at", expect.any(String)); 
-                  expect(responseObj).toHaveProperty("votes", expect.any(Number));
-                  expect(responseObj).toHaveProperty("article_img_url", expect.any(String));
-                          
+                 expect(responseObj).toEqual(expectedResponse);
+                   
                   })
               })
               test('GET:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
@@ -119,7 +122,7 @@ describe('/api/topics', ()=>{
                   .then((response) => {
                     
                     expect(response.body.msg).toBe("No user found for article: 5000000");
-                    
+
                   });
               });
               test('GET:400 responds with an appropriate error message when given an invalid id', () => {

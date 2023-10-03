@@ -31,9 +31,6 @@ const {
    
     const { article_id } = req.params;
     selectArticleById(article_id).then((article) => {
-      if (article === "No article") {
-       return next("No match found");
-      }
       res.status(200).send({ article });
     })
       .catch(err => {
