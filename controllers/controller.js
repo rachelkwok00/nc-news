@@ -6,9 +6,12 @@ const {
     getFile,
   selectArticleById,
   selectAllArticles,
-  selectArticleComment
+  selectArticleComment,
+  addComment
 
   } = require('../models/model.js');
+
+  app.use(express.json());
   
   exports.getTopics = (req, res, next) => {
     selectTopics()
@@ -71,6 +74,19 @@ const {
       } else{
       res.status(200).send({ comment });
     }
+    })
+      .catch(err => {
+       next(err);
+      })
+  };
+
+  exports.postComment = (req, res, next) => {
+    
+    const { article_id } = req.params;
+    const newComment  = req.body;
+  
+    addComment(parseInt(article_id),newComment).then((comment) => {
+      res.status(201).send(comment[0]); 
     })
       .catch(err => {
        next(err);

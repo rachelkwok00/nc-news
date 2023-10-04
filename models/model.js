@@ -1,22 +1,23 @@
 const db = require('../db/connection.js');
 const fs = require('fs/promises')
 
-function selectTopics(){
+function selectTopics() {
   return db.query('SELECT * FROM topics;').then((result) => {
     return result.rows;
   });
 };
 
-function getFile(){
-  
-return fs.readFile(`${__dirname}/../endpoints.json`).then((files)=>{ 
+function getFile() {
 
-return JSON.parse(files)
+  return fs.readFile(`${__dirname}/../endpoints.json`).then((files) => {
 
-})}
+    return JSON.parse(files)
 
-function selectArticleById(article_id){
- 
+  })
+}
+
+function selectArticleById(article_id) {
+
   return db
     .query('SELECT * FROM articles WHERE article_id = $1;', [article_id])
     .then((result) => {
@@ -27,14 +28,13 @@ function selectArticleById(article_id){
         });
       }
       return result.rows[0];
-      })
-      
-    }
+    })
+}
 
-function selectAllArticles(req){
+function selectAllArticles(req) {
 
-      return db
-        .query(`SELECT
+  return db
+    .query(`SELECT
         articles.author,
         articles.title,
         articles.article_id,
@@ -51,34 +51,34 @@ function selectAllArticles(req){
      articles.article_id
       ORDER BY
         articles.created_at DESC;`)
-        .then((result) => {
-          return result.rows
-        
-          
-        })
-      }
-
-
-function selectArticleComment(article_id){
-      
-        return db
-    .query('SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at ASC;', [article_id])
-       
-        
     .then((result) => {
+      return result.rows
 
-      return db
-      .query('SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at ASC;', [article_id])
-      .then((result) => {
-      
-        return result.rows;}
-      );
-  });
+
+    })
 }
-      
-      
-  
-        
-      
 
-module.exports = {selectTopics , getFile , selectArticleById ,  selectAllArticles , selectArticleComment}
+function selectArticleComment(article_id) {
+
+  return db
+    .query('SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at ASC;', [article_id])
+
+    .then((result) => {
+      return result.rows;
+    }
+    );
+};
+
+function addComment(article_id, newComment) {
+  
+  const { username, body } = newComment;
+  return db.query(`INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;`,
+    [article_id, username, body]
+
+  ).then((result) => {
+    return result.rows
+  })
+
+}
+
+module.exports = { selectTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment }

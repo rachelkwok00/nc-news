@@ -1,3 +1,4 @@
+-- SQLBook: Code
 \c nc_news_test
 
 

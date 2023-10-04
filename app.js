@@ -6,7 +6,8 @@ const {
     getData,
     getArticleById,
     fetchArticles,
-    fetchArticlesComment
+    fetchArticlesComment,
+    postComment
 } = require('./controllers/controller.js');
 
 
@@ -15,6 +16,7 @@ app.get('/api', getData);
 app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/articles', fetchArticles);
 app.get('/api/articles/:article_id/comments', fetchArticlesComment);
+app.post('/api/articles/:article_id/comments', postComment);
 
 app.all('/*', (req, res, next) => {
   res.status(404).send({msg: "No match found"});
@@ -33,8 +35,7 @@ app.use((err, req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-  
-    res.status(500).send({ msg: "Internal Server Error" });
-  });
+  res.status(500).send({ msg: "Internal Server Error" });
+});
 
 module.exports = app;
