@@ -59,14 +59,14 @@ function selectAllArticles(req){
       }
 
 
-      function selectArticleComment(article_id){
+function selectArticleComment(article_id){
       
         return db
     .query('SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at ASC;', [article_id])
        
         
     .then((result) => {
-      console.log(result.rows)
+     
       if (result.rows.length === 0 ) {
         return Promise.reject({
           status: 404,

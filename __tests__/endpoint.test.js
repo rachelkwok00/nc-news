@@ -176,29 +176,27 @@ describe('/api/articles', () => {
     
 })
 describe('/api/articles/:article_id/comment', () => {
-    
-    test("Should return a array with the properties author ,title, article_id, body. topic, created_at,  votes, article_img_url", () => {
+
+    test("Should return a array with the properties comment_id, body, article_id, votes, created_at, author", () => {
             return request(app).get("/api/articles/1/comments").expect(200).then(response => {
 
                 const responseObj = response.body.comment
 
                 expect(responseObj.length).toBe(11);
 
-                responseObj.map(obj=>{
-                  for (const key in obj) {
-  
+                responseObj.forEach(obj=>{
+
                   expect(obj).toBeInstanceOf(Object);
                   expect(obj).toHaveProperty("comment_id", expect.any(Number));
                   expect(obj).toHaveProperty("body", expect.any(String));
                   expect(obj).toHaveProperty("article_id", expect.any(Number));
                   expect(obj).toHaveProperty("votes", expect.any(Number));
                   expect(obj).toHaveProperty("created_at", expect.any(String));
-                  }
+                  expect(obj).toHaveProperty("author", expect.any(String));   
                 })
-
-             
             })
         })
+
         test('GET:404 sends an appropriate status and error message when given a valid but non-existent article id', () => {
           return request(app)
             .get("/api/articles/5000000/comments")
