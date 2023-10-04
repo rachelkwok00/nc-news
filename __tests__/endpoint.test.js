@@ -177,7 +177,7 @@ describe('/api/articles', () => {
 })
 describe('/api/articles/:article_id/comment', () => {
 
-    test("Should return a array with the properties comment_id, body, article_id, votes, created_at, author", () => {
+    test("GET: Should return a array with the properties comment_id, body, article_id, votes, created_at, author", () => {
             return request(app).get("/api/articles/1/comments").expect(200).then(response => {
 
                 const responseObj = response.body.comment
@@ -196,7 +196,16 @@ describe('/api/articles/:article_id/comment', () => {
                 })
             })
         })
+        test('GET:200 sends back a empty array when no comments are found with a valid article_id', () => {
+          return request(app)
+            .get("/api/articles/2/comments")
+            .expect(200)
+            .then((response) => {
+              console.log(response.body)
+              expect(response.body.comment).toEqual([]);
 
+            });
+        });
         test('GET:404 sends an appropriate status and error message when given a valid but non-existent article id', () => {
           return request(app)
             .get("/api/articles/5000000/comments")
@@ -225,3 +234,4 @@ describe('/api/articles/:article_id/comment', () => {
           })
       })
   })
+

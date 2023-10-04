@@ -56,9 +56,21 @@ const {
   exports.fetchArticlesComment = (req, res, next) => {
 
     const { article_id } = req.params;
-    selectArticleComment(article_id).then((comment) => {
 
+    Promise.all([
+      selectArticleById(article_id),
+      selectArticleComment(article_id)
+    ])
+
+    .then(([articleExist ,comment]) => {
+      if(!articleExist){
+       return {
+          status: 404,
+          msg: `No user found for article: ${article_id}`,
+        }
+      } else{
       res.status(200).send({ comment });
+    }
     })
       .catch(err => {
        next(err);
