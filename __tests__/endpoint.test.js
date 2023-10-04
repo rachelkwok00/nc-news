@@ -3,7 +3,6 @@ const request = require('supertest');
 const app = require('../app.js');
 const seed = require('../db/seeds/seed.js');
 const testData = require('../db/data/test-data/');
-// const jestSorted = require('jest-sorted');
 
 beforeEach(()=> seed(testData))
 afterAll(() => db.end());
@@ -144,7 +143,7 @@ describe('/api/articles', () => {
                 .get('/api/articles')
                 .expect(200)
                 .then((response) => {
-                   console.log(response.body.articles)
+                 
                     const articleArr = response.body.articles
 
                     expect(articleArr.length).toBe(13)

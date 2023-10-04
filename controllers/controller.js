@@ -41,7 +41,6 @@ const {
       })
   };
 
-
   exports.fetchArticles = (req, res, next) => {
     
     selectAllArticles(req).then((articles) => {
