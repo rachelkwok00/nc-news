@@ -14,22 +14,21 @@ app.get('/api', getData);
 app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/articles', fetchArticles);
 
-
+app.all('/*', (req, res, next) => {
+  res.status(404).send({msg: "No match found"});
+});
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   }
-  else if (err.code === "23502" || err.code === "22P02" || "Invalid query") {
+  if (err.code === "22P02") {
+    
     res.status(400).send({msg: "Bad request"});
   } else {
     next(err)
   }
 })
-
-app.all('/*', (req, res, next) => {
-  res.status(404).send({msg: "No match found"});
-});
 
 app.use((err, req, res, next) => {
     console.error(err);
