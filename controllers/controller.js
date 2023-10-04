@@ -5,7 +5,8 @@ const {
     selectTopics,
     getFile,
   selectArticleById,
-  selectAllArticles
+  selectAllArticles,
+  selectArticleComment
 
   } = require('../models/model.js');
   
@@ -49,5 +50,17 @@ const {
       .catch(err => {
     
         next(err);
+      })
+  };
+
+  exports.fetchArticlesComment = (req, res, next) => {
+
+    const { article_id } = req.params;
+    selectArticleComment(article_id).then((comment) => {
+
+      res.status(200).send({ comment });
+    })
+      .catch(err => {
+       next(err);
       })
   };

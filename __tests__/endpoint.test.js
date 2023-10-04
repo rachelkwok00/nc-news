@@ -96,7 +96,7 @@ describe('/api/articles/:article_id', () => {
                   return request(app).get("/api/articles/4").expect(200).then(response => {
 
                       const responseObj = response.body.article
-                    console.log(responseObj)
+                    
                       expect(Object.keys(responseObj).length).toBe(8);
 
                       const expectedResponse = {
@@ -175,3 +175,55 @@ describe('/api/articles', () => {
     })
     
 })
+describe('/api/articles/:article_id/comment', () => {
+    
+    test("Should return a array with the properties author ,title, article_id, body. topic, created_at,  votes, article_img_url", () => {
+            return request(app).get("/api/articles/1/comments").expect(200).then(response => {
+
+                const responseObj = response.body.comment
+
+                expect(responseObj.length).toBe(11);
+
+                responseObj.map(obj=>{
+                  for (const key in obj) {
+  
+                  expect(obj).toBeInstanceOf(Object);
+                  expect(obj).toHaveProperty("comment_id", expect.any(Number));
+                  expect(obj).toHaveProperty("body", expect.any(String));
+                  expect(obj).toHaveProperty("article_id", expect.any(Number));
+                  expect(obj).toHaveProperty("votes", expect.any(Number));
+                  expect(obj).toHaveProperty("created_at", expect.any(String));
+                  }
+                })
+
+             
+            })
+        })
+        test('GET:404 sends an appropriate status and error message when given a valid but non-existent article id', () => {
+          return request(app)
+            .get("/api/articles/5000000/comments")
+            .expect(404)
+            .then((response) => {
+              
+              expect(response.body.msg).toBe("No user found for article: 5000000");
+
+            });
+        });
+        test('GET:400 responds with an appropriate error message when given an invalid id', () => {
+          return request(app)
+            .get("/api/articles/not-a-id/comments")
+            .expect(400)
+            .then((response) => {
+              expect(response.body.msg).toBe('Bad request');
+            });
+        });
+        test("Returned array should be sorted by ascending order of comments created at", () => {
+          return request(app).get("/api/articles/5/comments").expect(200).then(result => {
+  
+              const commentArr = result.body.comment;
+            
+              expect(commentArr).toBeSorted({key: "created_at", ascending: true})
+             
+          })
+      })
+  })
