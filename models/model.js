@@ -84,4 +84,23 @@ function addComment(article_id, newComment) {
 
 }
 
-module.exports = { selectTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment }
+function changeVotes(article_id, newComment) {
+  console.log('in model')
+  
+const { vote_increment } = newComment;
+
+  return db.query(`
+  UPDATE  articles 
+  SET votes = votes + $1
+  WHERE article_id = $2
+  RETURNING *;`,[vote_increment , article_id ]
+    
+
+  ).then((result) => {
+    
+    return result.rows[0]
+  })
+
+}
+
+module.exports = { selectTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment ,changeVotes}
