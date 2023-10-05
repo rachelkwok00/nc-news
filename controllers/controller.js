@@ -65,15 +65,10 @@ const {
       selectArticleComment(article_id)
     ])
 
-    .then(([articleExist ,comment]) => {
-      if(!articleExist){
-       return {
-          status: 404,
-          msg: `No user found for article: ${article_id}`,
-        }
-      } else{
+    .then(([articleExist,comment]) => {
+      
       res.status(200).send({ comment });
-    }
+    
     })
       .catch(err => {
        next(err);
@@ -90,14 +85,10 @@ const {
       selectArticleById(article_id),
       addComment(article_id,newComment)
     ])
-    .then(([articleExist , comment]) => { if(!articleExist){
-      return {
-         status: 404,
-         msg: `No user found for article: ${article_id}`,
-       }
-     } else{
+    .then(([articleExist , comment]) => {
+      
       res.status(201).send(comment[0]); 
-   }
+   
   
     })
       .catch(err => {
