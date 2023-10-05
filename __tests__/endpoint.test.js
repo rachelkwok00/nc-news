@@ -244,10 +244,14 @@ describe('POST/api/articles/:article_id/comment', () => {
 
     return request(app).post("/api/articles/1/comments").send(newComment).expect(201).then(result => {
 
-      expect(result.body).toMatchObject({
-        author: "butter_bridge",
-        body: "new comment"
-      })
+      expect(result.body.comment.author).toBe("butter_bridge")
+      expect(result.body.comment.body).toBe("new comment")
+      expect(result.body.comment.article_id).toBe(1)
+      expect(result.body.comment.comment_id).toBe(19)
+      expect(typeof result.body.comment.created_at).toBe("string")
+      expect(result.body.comment.votes).toBe(0)
+
+      
     })
   })
   test("Should return a 201 status when passed a larger object, which should be ignored", () => {
@@ -260,11 +264,14 @@ describe('POST/api/articles/:article_id/comment', () => {
     };
 
     return request(app).post("/api/articles/1/comments").send(newComment).expect(201).then(result => {
+      
+      expect(result.body.comment.author).toBe("butter_bridge")
+      expect(result.body.comment.body).toBe("new comment")
+      expect(result.body.comment.article_id).toBe(1)
+      expect(result.body.comment.comment_id).toBe(19)
+      expect(typeof result.body.comment.created_at).toBe("string")
+      expect(result.body.comment.votes).toBe(0)
 
-      expect(result.body).toMatchObject({
-        author: "butter_bridge",
-        body: "new comment"
-      })
     })
   })
   test('GET:404 sends an appropriate status and error message when given a valid but non-existent article id', () => {
@@ -278,7 +285,7 @@ describe('POST/api/articles/:article_id/comment', () => {
       .expect(404)
       .then((response) => {
 
-        expect(response.body.msg).toBe("No user found for article: 5000000");
+        expect(response.body.msg).toBe("Not found");
 
       });
   });
@@ -325,4 +332,3 @@ describe('POST/api/articles/:article_id/comment', () => {
   });
 
 })
-
