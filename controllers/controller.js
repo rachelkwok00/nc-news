@@ -84,9 +84,21 @@ const {
     
     const { article_id } = req.params;
     const newComment  = req.body;
+
   
-    addComment(article_id,newComment).then((comment) => {
+     Promise.all([
+      selectArticleById(article_id),
+      addComment(article_id,newComment)
+    ])
+    .then(([articleExist , comment]) => { if(!articleExist){
+      return {
+         status: 404,
+         msg: `No user found for article: ${article_id}`,
+       }
+     } else{
       res.status(201).send(comment[0]); 
+   }
+  
     })
       .catch(err => {
        next(err);

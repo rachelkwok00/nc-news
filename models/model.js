@@ -72,10 +72,13 @@ function selectArticleComment(article_id) {
 function addComment(article_id, newComment) {
   
   const { username, body } = newComment;
+
+
   return db.query(`INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;`,
     [article_id, username, body]
 
   ).then((result) => {
+
     return result.rows
   })
 

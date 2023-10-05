@@ -250,9 +250,31 @@ describe('POST/api/articles/:article_id/comment', () => {
       })
     })
   })
+  test("Should return a 201 status when passed a larger object, which should be ignored", () => {
+
+    const newComment = {
+      username: "butter_bridge",
+      body: "new comment",
+      email: "example-email@gmail.com",
+      date : "14-12-34"
+    };
+
+    return request(app).post("/api/articles/1/comments").send(newComment).expect(201).then(result => {
+
+      expect(result.body).toMatchObject({
+        author: "butter_bridge",
+        body: "new comment"
+      })
+    })
+  })
   test('GET:404 sends an appropriate status and error message when given a valid but non-existent article id', () => {
-    return request(app)
-      .get("/api/articles/5000000/comments")
+
+    const newComment = {
+      username: "butter_bridge",
+      body: "new comment"
+    };
+
+    return request(app).post("/api/articles/5000000/comments").send(newComment)
       .expect(404)
       .then((response) => {
 
@@ -260,9 +282,42 @@ describe('POST/api/articles/:article_id/comment', () => {
 
       });
   });
+  test('GET:404 sends an appropriate status and error message when username is non-existent', () => {
+
+    const newComment = {
+      username: "Rachel",
+      body: "new comment",
+    };
+
+    return request(app).post("/api/articles/5/comments").send(newComment)
+      .expect(404)
+      .then((response) => {
+
+        expect(response.body.msg).toBe('Not found');
+
+      });
+  });
   test('GET:400 responds with an appropriate error message when given an invalid id', () => {
-    return request(app)
-      .get("/api/articles/not-a-id/comments")
+
+    const newComment = {
+      username: "butter_bridge",
+      body: "new comment"
+    };
+
+    return request(app).post("/api/articles/not-a-id/comments").send(newComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad request');
+      });
+  });
+
+  test('GET:400 responds with an appropriate error message when missing username or body', () => {
+
+    const newComment = {
+     email: 'example-email@gmail.com'
+    };
+
+    return request(app).post("/api/articles/5/comments").send(newComment)
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe('Bad request');
