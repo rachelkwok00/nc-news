@@ -1,3 +1,4 @@
+-- SQLBook: Code
 DROP DATABASE IF EXISTS nc_news_test;
 DROP DATABASE IF EXISTS nc_news;
 
