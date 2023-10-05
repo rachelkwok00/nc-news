@@ -85,7 +85,7 @@ const {
     const { article_id } = req.params;
     const newComment  = req.body;
   
-    addComment(parseInt(article_id),newComment).then((comment) => {
+    addComment(article_id,newComment).then((comment) => {
       res.status(201).send(comment[0]); 
     })
       .catch(err => {
