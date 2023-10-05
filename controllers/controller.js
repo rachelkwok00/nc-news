@@ -61,11 +61,12 @@ const {
     const { article_id } = req.params;
 
     Promise.all([
+      
+      selectArticleComment(article_id),
       selectArticleById(article_id),
-      selectArticleComment(article_id)
     ])
 
-    .then(([articleExist,comment]) => {
+    .then(([comment]) => {
       
       res.status(200).send({ comment });
     
@@ -79,15 +80,10 @@ const {
     
     const { article_id } = req.params;
     const newComment  = req.body;
-
-  
-     Promise.all([
-      selectArticleById(article_id),
-      addComment(article_id,newComment)
-    ])
-    .then(([articleExist , comment]) => {
       
-      res.status(201).send(comment[0]); 
+      addComment(article_id,newComment).then((comment) => {
+      
+      res.status(201).send({comment}); 
    
   
     })

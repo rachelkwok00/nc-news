@@ -79,7 +79,7 @@ function addComment(article_id, newComment) {
 
   ).then((result) => {
 
-    return result.rows
+    return result.rows[0]
   })
 
 }
