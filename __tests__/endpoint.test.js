@@ -435,11 +435,13 @@ describe('DELETE/api/comments/:comment_id', () => {
   })
 
  describe('GET/api/users', () => {
-    test.only('responds with status code 200 and a array of object with the correct properties', () => {
+    test('responds with status code 200 and a array of object with the correct properties', () => {
       return request(app).get('/api/users')
 .expect(200).then((response)=>{
 
-       expect(Array.isArray(response.body.users)).toBe(true)
+          expect(Array.isArray(response.body.users)).toBe(true)
+
+          const users = response.body.users
 
         expect(users.length).toBe(4)
         users.forEach(user => {
@@ -449,5 +451,5 @@ describe('DELETE/api/comments/:comment_id', () => {
         })
         })
     })
-
+  
   })
