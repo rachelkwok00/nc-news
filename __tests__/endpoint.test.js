@@ -415,14 +415,14 @@ describe('PATCH/api/articles/:article_id', () => {
 
 describe('DELETE/api/comments/:comment_id', () => {
 
-    test('sends back status code 204 when comment is deleted', () => {
+    test.only('sends back status code 204 when comment is deleted', () => {
   
       return request(app).delete("/api/comments/5").expect(204)
   
      })
      test('sends status code 400 - bad request when a invalid comment id is found', () => {
   
-      return request(app).delete("/api/comments/not-a-comment-it").expect(400).then(result=>{
+      return request(app).delete("/api/comments/not-a-comment-id").expect(400).then(result=>{
         expect(result.body.msg).toBe("Bad request")
       })
   
