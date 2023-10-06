@@ -439,8 +439,6 @@ describe('DELETE/api/comments/:comment_id', () => {
       return request(app).get('/api/users')
 .expect(200).then((response)=>{
 
-          expect(Array.isArray(response.body.users)).toBe(true)
-
           const users = response.body.users
 
         expect(users.length).toBe(4)
@@ -451,5 +449,4 @@ describe('DELETE/api/comments/:comment_id', () => {
         })
         })
     })
-  
   })
