@@ -85,8 +85,7 @@ function addComment(article_id, newComment) {
 }
 
 function changeVotes(article_id, newComment) {
-  console.log('in model')
-  
+
 const { vote_increment } = newComment;
 
   return db.query(`

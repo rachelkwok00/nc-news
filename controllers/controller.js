@@ -93,10 +93,10 @@ const {
   };
 
   exports.patchArticle = (req, res, next) => {
-    console.log('in controller')
+  
     const { article_id } = req.params;
     const voteIncrement  = req.body;
-      
+
     Promise.all([
       changeVotes(article_id,voteIncrement),
       selectArticleById(article_id)

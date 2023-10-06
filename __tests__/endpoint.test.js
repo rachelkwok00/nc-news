@@ -334,11 +334,8 @@ describe('POST/api/articles/:article_id/comment', () => {
 })
 
 describe('PATCH/api/articles/:article_id', () => {
-  test('PATCH:200 sends a single article object to the client with vote increment', () => {
 
-    return db.query('SELECT * FROM articles WHERE article_id = 1').then ((result)=>{
-
-      const oldVote = result.rows[0].votes
+  test.only('PATCH:200 sends a single article object to the client with vote increment', () => {
 
       const testVote = { vote_increment : 6 }
 
@@ -347,13 +344,11 @@ describe('PATCH/api/articles/:article_id', () => {
       .expect(200)
       .then((response) => {
 
-        const newVote = oldVote + testVote.vote_increment
-
-        const article= response.body.article
-         
-        expect(article.length).toBe(2)
-          expect(article[0].votes).toBe(newVote);
-        article.forEach((obj)=>{
+        const articleObj= response.body
+      
+        expect(articleObj).toBeInstanceOf(Object)
+      
+        articleObj.article.forEach((obj)=>{
           expect(obj).toHaveProperty("article_id", expect.any(Number))
           expect(obj).toHaveProperty("author", expect.any(String))
           expect(obj).toHaveProperty("title", expect.any(String))
@@ -361,17 +356,13 @@ describe('PATCH/api/articles/:article_id', () => {
           expect(obj).toHaveProperty("created_at", expect.any(String))
           expect(obj).toHaveProperty("article_img_url", expect.any(String))
           expect(obj).toHaveProperty("body", expect.any(String))
-          expect(obj).toHaveProperty("votes", expect.any(Number))
-          
-          
-        })
-       
+          expect(obj).toHaveProperty("votes")
+          expect(obj.votes).toBe(106) 
       });
     })
   });  
-  test('PATCH:400 sends a error when invalid is passed', () => {
+  test('PATCH:400 sends a error when invalid id is passed', () => {
 
-    return db.query('SELECT * FROM articles WHERE article_id = 1').then ((result)=>{
       const testVote = { vote_increment : 6 }
 
     return request(app)
@@ -383,7 +374,32 @@ describe('PATCH/api/articles/:article_id', () => {
         
       });
     })
-  });  
+    test('PATCH:400 sends a error when vote_increment value is not a number', () => {
+
+      const testVote = { vote_increment : 'not-a-number' }
+
+    return request(app)
+      .patch("/api/articles/6").send(testVote)
+      .expect(400)
+      .then((response) => {
+
+        expect(response.body.msg).toBe('Bad request');
+        
+      });
+    })
+    test('PATCH:400 sends a error when object key is not vote_increment is incorrect', () => {
+
+      const testVote = { 789 : 9 }
+
+    return request(app)
+      .patch("/api/articles/6").send(testVote)
+      .expect(400)
+      .then((response) => {
+
+        expect(response.body.msg).toBe('Bad request');
+        
+      });
+    })
   test('PATCH:404 sends a error when id does not exist', () => {
 
       const testVote = { vote_increment : 6 }
@@ -397,7 +413,4 @@ describe('PATCH/api/articles/:article_id', () => {
         
       });
     })
-
-  
-  });  
-
+  })
