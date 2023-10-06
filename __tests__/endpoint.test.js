@@ -335,7 +335,7 @@ describe('POST/api/articles/:article_id/comment', () => {
 
 describe('PATCH/api/articles/:article_id', () => {
 
-  test.only('PATCH:200 sends a single article object to the client with vote increment', () => {
+  test('PATCH:200 sends a single article object to the client with vote increment', () => {
 
       const testVote = { vote_increment : 6 }
 
@@ -408,7 +408,7 @@ describe('PATCH/api/articles/:article_id', () => {
       .patch("/api/articles/67676767").send(testVote)
       .expect(404)
       .then((response) => {
-        console.log(response.body)
+        
         expect(response.body.msg).toBe("No user found for article: 67676767");
         
       });
