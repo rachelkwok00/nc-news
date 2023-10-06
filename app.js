@@ -8,7 +8,8 @@ const {
     fetchArticles,
     fetchArticlesComment,
     postComment,
-    patchArticle
+    patchArticle,
+    deleteComment
 } = require('./controllers/controller.js');
 
 
@@ -19,7 +20,7 @@ app.get('/api/articles', fetchArticles);
 app.get('/api/articles/:article_id/comments', fetchArticlesComment);
 app.post('/api/articles/:article_id/comments', postComment);
 app.patch('/api/articles/:article_id', patchArticle);
-
+app.delete('/api/comments/:comment_id', deleteComment);
 
 app.all('/*', (req, res, next) => {
   res.status(404).send({msg: "No match found"});
@@ -42,7 +43,7 @@ app.use((err, req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
- console.log(err)
+console.log(err)
   res.status(500).send({ msg: "Internal Server Error" });
 });
 

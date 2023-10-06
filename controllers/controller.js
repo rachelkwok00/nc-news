@@ -8,7 +8,8 @@ const {
   selectAllArticles,
   selectArticleComment,
   addComment,
-  changeVotes
+  changeVotes,
+  removeComment
   } = require('../models/model.js');
 
   app.use(express.json());
@@ -39,9 +40,8 @@ const {
     selectArticleById(article_id).then((article) => {
       res.status(200).send({ article });
     })
-      .catch(err => {
-      
-        next(err);
+      .catch(err => {  
+       next(err);
       })
   };
 
@@ -101,6 +101,20 @@ const {
       
       res.status(200).send({article}); 
    
+  
+    })
+      .catch(err => {
+       next(err);
+      })
+  };
+  
+  exports.deleteComment = (req, res, next) => {
+  
+    const { comment_id } = req.params;
+
+    removeComment(comment_id).then(() => {
+      
+      res.status(204).send();
   
     })
       .catch(err => {

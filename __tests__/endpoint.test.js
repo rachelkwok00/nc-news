@@ -412,3 +412,24 @@ describe('PATCH/api/articles/:article_id', () => {
       });
     })
   })
+
+describe('DELETE/api/comments/:comment_id', () => {
+
+    test.only('sends back status code 204 when comment is deleted', () => {
+  
+      return request(app).delete("/api/comments/5").expect(204)
+  
+     })
+     test('sends status code 400 - bad request when a invalid comment id is found', () => {
+  
+      return request(app).delete("/api/comments/not-a-comment-id").expect(400).then(result=>{
+        expect(result.body.msg).toBe("Bad request")
+      })
+  
+     })
+     test("Should return a 400 - bad request if no comment with the ID passed is found", () => {
+      return request(app).delete("/api/comments/444444").expect(400).then(result => {
+          expect(result.body.msg).toBe("No comment found : 444444")
+      });
+  })
+  })

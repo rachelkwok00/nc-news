@@ -108,4 +108,22 @@ const { vote_increment } = newComment;
 
 }
 
-module.exports = { selectTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment ,changeVotes}
+function removeComment(comment_id) {
+  
+    return db.query(`
+   DELETE FROM comments
+   WHERE comment_id = $1;`,
+   [comment_id]
+    ).then((result) => {
+      
+      if (result.rowCount === 0) {
+         return Promise.reject({
+        status: 400,
+        msg: `No comment found : ${comment_id}`,
+      }); 
+      }
+     return result.rows
+    })
+  
+  }
+module.exports = { selectTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment ,changeVotes, removeComment}
