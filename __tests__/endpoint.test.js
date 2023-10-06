@@ -415,7 +415,7 @@ describe('PATCH/api/articles/:article_id', () => {
 
 describe('DELETE/api/comments/:comment_id', () => {
 
-    test.only('sends back status code 204 when comment is deleted', () => {
+    test('sends back status code 204 when comment is deleted', () => {
   
       return request(app).delete("/api/comments/5").expect(204)
   
@@ -432,4 +432,21 @@ describe('DELETE/api/comments/:comment_id', () => {
           expect(result.body.msg).toBe("No comment found : 444444")
       });
   })
+  })
+
+ describe('GET/api/users', () => {
+    test('responds with status code 200 and a array of object with the correct properties', () => {
+      return request(app).get('/api/users')
+.expect(200).then((response)=>{
+
+          const users = response.body.users
+
+        expect(users.length).toBe(4)
+        users.forEach(user => {
+          expect(user).toHaveProperty("username", expect.any(String))
+          expect(user).toHaveProperty("name", expect.any(String))
+          expect(user).toHaveProperty("avatar_url", expect.any(String))
+        })
+        })
+    })
   })
