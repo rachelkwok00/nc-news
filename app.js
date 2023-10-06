@@ -9,7 +9,8 @@ const {
     fetchArticlesComment,
     postComment,
     patchArticle,
-    deleteComment
+    deleteComment,
+    fetchUsers
 } = require('./controllers/controller.js');
 
 
@@ -21,6 +22,7 @@ app.get('/api/articles/:article_id/comments', fetchArticlesComment);
 app.post('/api/articles/:article_id/comments', postComment);
 app.patch('/api/articles/:article_id', patchArticle);
 app.delete('/api/comments/:comment_id', deleteComment);
+app.get('/api/users', fetchUsers);
 
 app.all('/*', (req, res, next) => {
   res.status(404).send({msg: "No match found"});

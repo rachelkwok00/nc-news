@@ -9,7 +9,8 @@ const {
   selectArticleComment,
   addComment,
   changeVotes,
-  removeComment
+  removeComment,
+  getUsers
   } = require('../models/model.js');
 
   app.use(express.json());
@@ -115,6 +116,19 @@ const {
     removeComment(comment_id).then(() => {
       
       res.status(204).send();
+  
+    })
+      .catch(err => {
+       next(err);
+      })
+  };
+
+
+  exports. fetchUsers = (req, res, next) => {
+  
+   getUsers().then((users) => {
+      
+      res.status(200).send({users});
   
     })
       .catch(err => {
