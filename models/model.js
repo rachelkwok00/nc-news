@@ -24,7 +24,7 @@ function selectArticleById(article_id) {
       if (result.rows.length === 0) {
         return Promise.reject({
           status: 404,
-          msg: `No user found for article: ${article_id}`,
+          msg: `No article found : ${article_id}`,
         });
       }
       return result.rows[0];
@@ -84,4 +84,28 @@ function addComment(article_id, newComment) {
 
 }
 
-module.exports = { selectTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment }
+function changeVotes(article_id, newComment) {
+
+const { vote_increment } = newComment;
+
+  return db.query(`
+  UPDATE  articles 
+  SET votes = votes + $1
+  WHERE article_id = $2
+  RETURNING *;`,[vote_increment , article_id ]
+    
+
+  ).then((result) => {
+    if (result.rows.length === 0) {
+    return Promise.reject({
+      status: 404,
+      msg: `No article found : ${article_id}`,
+    });
+  }
+    
+    return result.rows[0]
+  })
+
+}
+
+module.exports = { selectTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment ,changeVotes}

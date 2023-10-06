@@ -119,7 +119,7 @@ describe('/api/articles/:article_id', () => {
       .expect(404)
       .then((response) => {
 
-        expect(response.body.msg).toBe("No user found for article: 5000000");
+        expect(response.body.msg).toBe("No article found : 5000000");
 
       });
   });
@@ -210,7 +210,7 @@ describe('/api/articles/:article_id/comment', () => {
       .expect(404)
       .then((response) => {
 
-        expect(response.body.msg).toBe("No user found for article: 5000000");
+        expect(response.body.msg).toBe("No article found : 5000000");
 
       });
   });
@@ -332,3 +332,83 @@ describe('POST/api/articles/:article_id/comment', () => {
   });
 
 })
+
+describe('PATCH/api/articles/:article_id', () => {
+
+  test('PATCH:200 sends a single article object to the client with vote increment', () => {
+
+      const testVote = { vote_increment : 6 }
+
+    return request(app)
+      .patch("/api/articles/1").send(testVote)
+      .expect(200)
+      .then((response) => {
+  
+        expect(response.body).toBeInstanceOf(Object)
+
+      const articleObj= response.body.article
+
+        expect(articleObj.votes).toBe(106)
+       
+        expect(articleObj).toHaveProperty("article_id", expect.any(Number))
+        expect(articleObj).toHaveProperty("author", expect.any(String))
+        expect(articleObj).toHaveProperty("title", expect.any(String))
+        expect(articleObj).toHaveProperty("topic", expect.any(String))
+        expect(articleObj).toHaveProperty("created_at", expect.any(String))
+        expect(articleObj).toHaveProperty("article_img_url", expect.any(String))
+        expect(articleObj).toHaveProperty("body", expect.any(String))
+    })
+  });  
+  test('PATCH:400 sends a error when invalid id is passed', () => {
+
+      const testVote = { vote_increment : 6 }
+
+    return request(app)
+      .patch("/api/articles/not-a-id").send(testVote)
+      .expect(400)
+      .then((response) => {
+
+        expect(response.body.msg).toBe('Bad request');
+        
+      });
+    })
+    test('PATCH:400 sends a error when vote_increment value is not a number', () => {
+
+      const testVote = { vote_increment : 'not-a-number' }
+
+    return request(app)
+      .patch("/api/articles/6").send(testVote)
+      .expect(400)
+      .then((response) => {
+
+        expect(response.body.msg).toBe('Bad request');
+        
+      });
+    })
+    test('PATCH:400 sends a error when object key is not vote_increment', () => {
+
+      const testVote = { notVoteIncrement : 9 }
+
+    return request(app)
+      .patch("/api/articles/6").send(testVote)
+      .expect(400)
+      .then((response) => {
+
+        expect(response.body.msg).toBe('Bad request');
+        
+      });
+    })
+  test('PATCH:404 sends a error when id does not exist', () => {
+
+      const testVote = { vote_increment : 6 }
+
+    return request(app)
+      .patch("/api/articles/67676767").send(testVote)
+      .expect(404)
+      .then((response) => {
+        
+        expect(response.body.msg).toBe("No article found : 67676767");
+        
+      });
+    })
+  })

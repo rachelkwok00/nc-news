@@ -7,8 +7,8 @@ const {
   selectArticleById,
   selectAllArticles,
   selectArticleComment,
-  addComment
-
+  addComment,
+  changeVotes
   } = require('../models/model.js');
 
   app.use(express.json());
@@ -84,6 +84,22 @@ const {
       addComment(article_id,newComment).then((comment) => {
       
       res.status(201).send({comment}); 
+   
+  
+    })
+      .catch(err => {
+       next(err);
+      })
+  };
+
+  exports.patchArticle = (req, res, next) => {
+  
+    const { article_id } = req.params;
+    const voteIncrement  = req.body;
+
+    changeVotes(article_id,voteIncrement).then((article) => {
+      
+      res.status(200).send({article}); 
    
   
     })
