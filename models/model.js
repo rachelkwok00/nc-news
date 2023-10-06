@@ -130,7 +130,7 @@ function removeComment(comment_id) {
 
 
 
-function getUsers(comment_id) {
+function getUsers() {
   
     return db.query(`
   SELECT * FROM users;`
@@ -141,4 +141,5 @@ function getUsers(comment_id) {
     })
   
   }
+
 module.exports = { selectTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment ,changeVotes, removeComment,getUsers}
