@@ -343,22 +343,15 @@ describe('PATCH/api/articles/:article_id', () => {
       .patch("/api/articles/1").send(testVote)
       .expect(200)
       .then((response) => {
-
-        const articleObj= response.body
-      
+        console.log(response.body)
+      const articleObj= response.body
+     
         expect(articleObj).toBeInstanceOf(Object)
-      
-        articleObj.article.forEach((obj)=>{
-          expect(obj).toHaveProperty("article_id", expect.any(Number))
-          expect(obj).toHaveProperty("author", expect.any(String))
-          expect(obj).toHaveProperty("title", expect.any(String))
-          expect(obj).toHaveProperty("topic", expect.any(String))
-          expect(obj).toHaveProperty("created_at", expect.any(String))
-          expect(obj).toHaveProperty("article_img_url", expect.any(String))
-          expect(obj).toHaveProperty("body", expect.any(String))
-          expect(obj).toHaveProperty("votes")
-          expect(obj.votes).toBe(106) 
-      });
+
+        expect(articleObj.article.votes).toBe(106)
+        expect(articleObj.article.votes).toBe(106)
+   
+    
     })
   });  
   test('PATCH:400 sends a error when invalid id is passed', () => {
@@ -387,9 +380,9 @@ describe('PATCH/api/articles/:article_id', () => {
         
       });
     })
-    test('PATCH:400 sends a error when object key is not vote_increment is incorrect', () => {
+    test('PATCH:400 sends a error when object key is not vote_increment', () => {
 
-      const testVote = { 789 : 9 }
+      const testVote = { notVoteIncrement : 9 }
 
     return request(app)
       .patch("/api/articles/6").send(testVote)

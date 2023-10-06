@@ -96,6 +96,12 @@ const { vote_increment } = newComment;
     
 
   ).then((result) => {
+    if (result.rows.length === 0) {
+    return Promise.reject({
+      status: 404,
+      msg: `No user found for article: ${article_id}`,
+    });
+  }
     
     return result.rows[0]
   })

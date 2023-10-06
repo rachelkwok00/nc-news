@@ -97,10 +97,7 @@ const {
     const { article_id } = req.params;
     const voteIncrement  = req.body;
 
-    Promise.all([
-      changeVotes(article_id,voteIncrement),
-      selectArticleById(article_id)
-    ]).then((article) => {
+    changeVotes(article_id,voteIncrement).then((article) => {
       
       res.status(200).send({article}); 
    
