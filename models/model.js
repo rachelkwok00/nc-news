@@ -24,7 +24,7 @@ function selectArticleById(article_id) {
       if (result.rows.length === 0) {
         return Promise.reject({
           status: 404,
-          msg: `No user found for article: ${article_id}`,
+          msg: `No article found : ${article_id}`,
         });
       }
       return result.rows[0];
@@ -99,7 +99,7 @@ const { vote_increment } = newComment;
     if (result.rows.length === 0) {
     return Promise.reject({
       status: 404,
-      msg: `No user found for article: ${article_id}`,
+      msg: `No article found : ${article_id}`,
     });
   }
     

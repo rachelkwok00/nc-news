@@ -119,7 +119,7 @@ describe('/api/articles/:article_id', () => {
       .expect(404)
       .then((response) => {
 
-        expect(response.body.msg).toBe("No user found for article: 5000000");
+        expect(response.body.msg).toBe("No article found : 5000000");
 
       });
   });
@@ -210,7 +210,7 @@ describe('/api/articles/:article_id/comment', () => {
       .expect(404)
       .then((response) => {
 
-        expect(response.body.msg).toBe("No user found for article: 5000000");
+        expect(response.body.msg).toBe("No article found : 5000000");
 
       });
   });
@@ -343,15 +343,20 @@ describe('PATCH/api/articles/:article_id', () => {
       .patch("/api/articles/1").send(testVote)
       .expect(200)
       .then((response) => {
-        console.log(response.body)
-      const articleObj= response.body
-     
-        expect(articleObj).toBeInstanceOf(Object)
+  
+        expect(response.body).toBeInstanceOf(Object)
 
-        expect(articleObj.article.votes).toBe(106)
-        expect(articleObj.article.votes).toBe(106)
-   
-    
+      const articleObj= response.body.article
+
+        expect(articleObj.votes).toBe(106)
+       
+        expect(articleObj).toHaveProperty("article_id", expect.any(Number))
+        expect(articleObj).toHaveProperty("author", expect.any(String))
+        expect(articleObj).toHaveProperty("title", expect.any(String))
+        expect(articleObj).toHaveProperty("topic", expect.any(String))
+        expect(articleObj).toHaveProperty("created_at", expect.any(String))
+        expect(articleObj).toHaveProperty("article_img_url", expect.any(String))
+        expect(articleObj).toHaveProperty("body", expect.any(String))
     })
   });  
   test('PATCH:400 sends a error when invalid id is passed', () => {
@@ -402,7 +407,7 @@ describe('PATCH/api/articles/:article_id', () => {
       .expect(404)
       .then((response) => {
         
-        expect(response.body.msg).toBe("No user found for article: 67676767");
+        expect(response.body.msg).toBe("No article found : 67676767");
         
       });
     })
