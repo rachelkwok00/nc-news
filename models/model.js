@@ -1,7 +1,8 @@
 const db = require('../db/connection.js');
 const fs = require('fs/promises')
 
-function selectTopics() {
+function getTopics() {
+
   return db.query('SELECT * FROM topics;').then((result) => {
     return result.rows;
   });
@@ -31,10 +32,27 @@ function selectArticleById(article_id) {
     })
 }
 
-function selectAllArticles(req) {
+function checkTopic(topic){
 
-  return db
-    .query(`SELECT
+  if(!topic){
+    return []
+  }
+  return db.query(`SELECT * FROM topics WHERE slug = $1;`,[topic]).then((result)=>{
+  if(result.rows.length === 0){
+    return Promise.reject ({
+      status: 400,
+      msg : 'Invalid topic'
+      })
+}
+    return result.rows
+  
+    
+  })
+}
+
+function selectAllArticles( sortby = 'created_at', topic) {
+  
+    let query = `SELECT
         articles.author,
         articles.title,
         articles.article_id,
@@ -43,17 +61,22 @@ function selectAllArticles(req) {
         articles.votes,
         articles.article_img_url,
         COUNT(comments.article_id) AS comment_count
-      FROM
-        articles
-      LEFT JOIN
-        comments ON articles.article_id = comments.article_id
-      GROUP BY
-     articles.article_id
-      ORDER BY
-        articles.created_at DESC;`)
-    .then((result) => {
-      return result.rows
+      FROM articles 
+      LEFT JOIN comments ON articles.article_id = comments.article_id
+  ` 
+  
+        const values = []
 
+if(topic){
+  query += ` WHERE articles.topic = $1`
+  values.push(topic)
+}
+  
+  query +=   ` GROUP BY articles.article_id ORDER BY articles.created_at DESC;`
+
+        return db.query(query, values).then(({rows}) => {
+     
+      return rows
 
     })
 }
@@ -130,10 +153,10 @@ function removeComment(comment_id) {
 
 
 
-function getUsers(comment_id) {
+function getUsers() {
   
     return db.query(`
-  SELECT * FROM users;`
+  SELECT * FROM users;`,
   
     ).then((result) => {
       
@@ -141,4 +164,4 @@ function getUsers(comment_id) {
     })
   
   }
-module.exports = { selectTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment ,changeVotes, removeComment,getUsers}
+module.exports = { getTopics, getFile, selectArticleById, selectAllArticles, selectArticleComment, addComment ,changeVotes, removeComment,getUsers , checkTopic}

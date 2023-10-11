@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 
 const {
-    selectTopics,
+    getTopics,
     getFile,
   selectArticleById,
   selectAllArticles,
@@ -10,13 +10,15 @@ const {
   addComment,
   changeVotes,
   removeComment,
-  getUsers
+  getUsers,
+  checkTopic
   } = require('../models/model.js');
 
   app.use(express.json());
   
-  exports.getTopics = (req, res, next) => {
-    selectTopics()
+  exports.fetchTopics = (req, res, next) => {
+   
+    getTopics()
     .then(result => {
       res.status(200).send({topics : result});
     })
@@ -47,8 +49,14 @@ const {
   };
 
   exports.fetchArticles = (req, res, next) => {
-    
-    selectAllArticles(req).then((articles) => {
+
+    const  { sortby , topic} = req.query
+   
+    Promise.all([
+ selectAllArticles(sortby ,topic),
+ checkTopic(topic)
+    ]).then(([articles]) => {
+     
       res.status(200).send({ articles });
     })
       .catch(err => {
@@ -124,7 +132,7 @@ const {
   };
 
 
-  exports. fetchUsers = (req, res, next) => {
+  exports.fetchUsers = (req, res, next) => {
   
    getUsers().then((users) => {
       

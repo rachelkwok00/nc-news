@@ -8,25 +8,16 @@ beforeEach(() => seed(testData))
 afterAll(() => db.end());
 
 describe('/api/topics', () => {
-  test('responds with status code 200', () => {
-    return request(app).get('/api/topics')
-      .expect(200)
-  })
-  test("Should return an object with property topics", () => {
-    return request(app).get("/api/topics").expect(200).then(result => {
-      expect(Array.isArray(result.body.topics)).toBe(true);
-    })
-  })
-  test("Should return an object with the property topics", () => {
-    return request(app).get("/api/topics").expect(200).then(result => {
-      expect(result).hasOwnProperty("topics");
-    })
-  })
+
   test("Should return an nested object each with the property slug and description", () => {
     return request(app).get("/api/topics").expect(200).then(result => {
 
+    expect(result).hasOwnProperty("topics");
+
       const topics = result.body.topics
+      
       expect(topics.length).toBe(3)
+
       topics.forEach(topic => {
         expect(topic).toHaveProperty("slug", expect.any(String))
         expect(topic).toHaveProperty("description", expect.any(String))
@@ -172,7 +163,46 @@ describe('/api/articles', () => {
 
     })
   })
+  test("The array returned should be sorted by topic", () => {
 
+    return request(app)
+      .get(`/api/articles?topic=mitch`)
+      .expect(200)
+      .then((response) => {
+        
+        const articleArr = response.body.articles
+
+        expect(articleArr.length).toBe(12)
+
+        articleArr.forEach((article) => {
+         
+          expect(article.topic).toBe('mitch')
+        })
+      })
+  })
+
+  test("should send back a 200 with a empty array when a valid topic is passed with no articles", () => {
+
+    return request(app)
+      .get(`/api/articles?topic=paper`)
+      .expect(200)
+      .then((response) => {
+        
+        expect(response.body.articles).toEqual([])
+     
+      })
+  })
+  test("Should return a 400 when a invalid topic is passed", () => {
+
+    return request(app)
+      .get('/api/articles?topic=not-valid-topic')
+      .expect(400)
+      .then((response) => {
+
+        expect(response.body.msg).toBe("Invalid topic");
+
+      })
+  })
 })
 describe('/api/articles/:article_id/comment', () => {
 

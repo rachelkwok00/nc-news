@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 app.use (express.json()) ;
 const {
-    getTopics,
+    fetchTopics,
     getData,
     getArticleById,
     fetchArticles,
@@ -14,7 +14,7 @@ const {
 } = require('./controllers/controller.js');
 
 
-app.get('/api/topics', getTopics);
+app.get('/api/topics', fetchTopics);
 app.get('/api', getData);
 app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/articles', fetchArticles);
