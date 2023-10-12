@@ -1,3 +1,4 @@
+const { Console } = require('console');
 const db = require('../db/connection.js');
 const fs = require('fs/promises')
 
@@ -20,7 +21,14 @@ function getFile() {
 function selectArticleById(article_id) {
 
   return db
-    .query('SELECT * FROM articles WHERE article_id = $1;', [article_id])
+    .query(`SELECT articles.*,
+    COUNT(comments.article_id) AS comment_count
+    FROM articles 
+    LEFT JOIN comments ON articles.article_id = comments.article_id
+    WHERE articles.article_id = $1
+    GROUP BY articles.article_id
+    ;`, [article_id])
+
     .then((result) => {
       if (result.rows.length === 0) {
         return Promise.reject({
@@ -28,8 +36,10 @@ function selectArticleById(article_id) {
           msg: `No article found : ${article_id}`,
         });
       }
-      return result.rows[0];
-    })
+
+
+        return result.rows[0]
+       })
 }
 
 function checkTopic(topic){
