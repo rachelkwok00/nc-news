@@ -14,6 +14,7 @@ const {
     fetchUsers
 } = require('./controllers/controller.js');
 
+app.use(cors());
 
 app.get('/api/topics', fetchTopics);
 app.get('/api', getData);
@@ -25,7 +26,7 @@ app.patch('/api/articles/:article_id', patchArticle);
 app.delete('/api/comments/:comment_id', deleteComment);
 app.get('/api/users', fetchUsers);
 
-app.use(cors());
+
 
 app.all('/*', (req, res, next) => {
   res.status(404).send({msg: "No match found"});
