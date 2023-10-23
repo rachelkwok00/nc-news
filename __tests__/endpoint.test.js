@@ -84,11 +84,9 @@ describe('/api/articles/:article_id', () => {
 
   test("Should return a object with the properties author ,title, article_id, body. topic, created_at,  votes, article_img_url", () => {
     return request(app).get("/api/articles/4").expect(200).then(response => {
-
+     
       const responseObj = response.body.article
-
-      expect(Object.keys(responseObj).length).toBe(8);
-
+      
       const expectedResponse = {
         article_id: 4,
         title: 'Student SUES Mitch!',
@@ -100,7 +98,7 @@ describe('/api/articles/:article_id', () => {
         article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
       };
 
-      expect(responseObj).toEqual(expectedResponse);
+      expect(responseObj).toMatchObject(expectedResponse);
 
     })
   })
@@ -122,9 +120,24 @@ describe('/api/articles/:article_id', () => {
         expect(response.body.msg).toBe('Bad request');
       });
   });
+  
 
 })
+describe('GET comment-count /api/articles/:article_id' , () => {
+  test('GET:200 sends a single article object to the client with the property comment_count', () => {
+    return request(app)
+      .get('/api/articles/5')
+      .expect(200)
+      .then((response) => {
+        expect(response.body.article.hasOwnProperty('comment_count'));
+        expect(typeof response.body.article.comment_count).toBe('string');
+        expect(response.body.article.comment_count).toBe('2')
+      });
+  });
 
+  
+
+})
 describe('/api/articles', () => {
 
   test("The array returned should be the correct length and contain the correct properties,not body", () => {
