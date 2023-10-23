@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 app.use (express.json()) ;
+const cors = require('cors');
 const {
     fetchTopics,
     getData,
@@ -23,6 +24,8 @@ app.post('/api/articles/:article_id/comments', postComment);
 app.patch('/api/articles/:article_id', patchArticle);
 app.delete('/api/comments/:comment_id', deleteComment);
 app.get('/api/users', fetchUsers);
+
+app.use(cors());
 
 app.all('/*', (req, res, next) => {
   res.status(404).send({msg: "No match found"});
